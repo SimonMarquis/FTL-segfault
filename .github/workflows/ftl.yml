@@ -19,6 +19,8 @@ jobs:
         uses: gradle/gradle-build-action@v2.2.2
       - name: Fix gradlew permission
         run: chmod +x gradlew
+      - name: Accept Android licenses
+        run: yes | sudo ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --licenses
       - name: Assemble
         run: ./gradlew assembleDebug assembleDebugAndroidTest --stacktrace
       - name: Upload APK
@@ -31,6 +33,13 @@ jobs:
         with:
           name: app-debug-androidTest.apk
           path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+      - name: Run AndroidTest on local emulator
+        run: ./gradlew pixel2api30DebugAndroidTest --stacktrace
+      - name: Upload AndroidTest results
+        uses: actions/upload-artifact@v3
+        with:
+          name: androidTests
+          path: app/build/reports/androidTests
       - name: Create serviceAccountCredentials.json
         run: echo "$SERVICE_ACCOUNT_CREDENTIALS" | base64 --decode > serviceAccountCredentials.json
         env:

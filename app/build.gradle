@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.ManagedVirtualDevice
+
 plugins {
     id 'com.android.application'
     id 'com.google.dagger.hilt.android'
@@ -31,6 +33,15 @@ android {
         packagingOptions {
             jniLibs {
                 useLegacyPackaging true
+            }
+        }
+        managedDevices {
+            devices {
+                pixel2api30(ManagedVirtualDevice) {
+                    device = "Pixel 2"
+                    apiLevel = 30
+                    systemImageSource = "aosp-atd"
+                }
             }
         }
     }
